@@ -10,7 +10,7 @@ type PsOptions struct {
 	Before string
 }
 
-func (dock *Docker) Ps(options *PsOptions) (error, []Container) {
+func (dock *Docker) Ps(options *PsOptions) (error, []docker.APIContainers) {
 	client, err := docker.NewClient(resolveDockerEndpoint(dock.endpointURL))
 	if err != nil {
 		return err, nil
@@ -27,44 +27,5 @@ func (dock *Docker) Ps(options *PsOptions) (error, []Container) {
 		return err, nil
 	}
 
-	return nil, convertAllContainers(containers)
-}
-
-func convertAllContainers(APIContainers []docker.APIContainers) []Container {
-	var output []Container
-	for _, container := range APIContainers {
-		output = append(output, convertContainer(container))
-	}
-	return output
-}
-
-func convertContainer(APIContainer docker.APIContainers) Container {
-	return Container{
-		ID:         APIContainer.ID,
-		Image:      APIContainer.Image,
-		Command:    APIContainer.Command,
-		Created:    APIContainer.Created,
-		Status:     APIContainer.Status,
-		Ports:      convertAllPorts(APIContainer.Ports),
-		SizeRw:     APIContainer.SizeRw,
-		SizeRootFs: APIContainer.SizeRootFs,
-		Names:      APIContainer.Names,
-	}
-}
-
-func convertAllPorts(APIPorts []docker.APIPort) []Port {
-	var output []Port
-	for _, port := range APIPorts {
-		output = append(output, convertPort(port))
-	}
-	return output
-}
-
-func convertPort(APIPort docker.APIPort) Port {
-	return Port{
-		PrivatePort: APIPort.PrivatePort,
-		PublicPort:  APIPort.PublicPort,
-		Type:        APIPort.Type,
-		IP:          APIPort.IP,
-	}
+	return nil, containers
 }
