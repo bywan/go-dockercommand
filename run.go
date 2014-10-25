@@ -11,15 +11,11 @@ type RunOptions struct {
 }
 
 func (dock *Docker) Run(options *RunOptions) (string, error) {
-	client, err := docker.NewClient(resolveDockerEndpoint(dock.endpointURL))
-	if err != nil {
-		return "", err
-	}
-	if err = pullImageIfNotExist(options.Image); err != nil {
+	if err := dock.pullImageIfNotExist(options.Image); err != nil {
 		return "", err
 	}
 
-	container, err := client.CreateContainer(docker.CreateContainerOptions{
+	container, err := dock.client.CreateContainer(docker.CreateContainerOptions{
 		Config: &docker.Config{
 			Image: options.Image,
 			Cmd:   options.Cmd,
@@ -30,7 +26,7 @@ func (dock *Docker) Run(options *RunOptions) (string, error) {
 		return "", err
 	}
 
-	err = client.StartContainer(container.ID, &docker.HostConfig{
+	err = dock.client.StartContainer(container.ID, &docker.HostConfig{
 		Binds: options.VolumeBinds,
 	})
 	if err != nil {
@@ -38,7 +34,7 @@ func (dock *Docker) Run(options *RunOptions) (string, error) {
 	}
 
 	if !options.Detach {
-		_, err = client.WaitContainer(container.ID)
+		_, err = dock.client.WaitContainer(container.ID)
 		if err != nil {
 			return "", err
 		}

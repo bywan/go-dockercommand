@@ -11,12 +11,7 @@ type PsOptions struct {
 }
 
 func (dock *Docker) Ps(options *PsOptions) ([]docker.APIContainers, error) {
-	client, err := docker.NewClient(resolveDockerEndpoint(dock.endpointURL))
-	if err != nil {
-		return nil, err
-	}
-
-	containers, err := client.ListContainers(docker.ListContainersOptions{
+	containers, err := dock.client.ListContainers(docker.ListContainersOptions{
 		All:    options.All,
 		Size:   options.Size,
 		Limit:  options.Limit,

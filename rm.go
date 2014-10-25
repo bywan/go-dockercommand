@@ -8,13 +8,8 @@ type RmOptions struct {
 }
 
 func (dock *Docker) Rm(options *RmOptions) error {
-	client, err := docker.NewClient(resolveDockerEndpoint(dock.endpointURL))
-	if err != nil {
-		return err
-	}
-
 	for _, containerID := range options.Container {
-		err = client.RemoveContainer(docker.RemoveContainerOptions{ID: containerID, Force: options.Force})
+		err := dock.client.RemoveContainer(docker.RemoveContainerOptions{ID: containerID, Force: options.Force})
 		if err != nil {
 			return err
 		}

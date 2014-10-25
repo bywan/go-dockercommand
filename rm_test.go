@@ -3,7 +3,10 @@ package dockercommand
 import "testing"
 
 func TestDockerRm(t *testing.T) {
-	docker := &Docker{}
+	docker, err := NewDocker("")
+	if err != nil {
+		t.Fatalf("err: %s", err)
+	}
 	containerID, err := docker.Run(&RunOptions{
 		Image: "ubuntu",
 		Cmd:   []string{"ls", "/"},
