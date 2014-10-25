@@ -7,7 +7,7 @@ import (
 	docker "github.com/fsouza/go-dockerclient"
 )
 
-func ResolveDockerEndpoint(input string) string {
+func resolveDockerEndpoint(input string) string {
 	if len(input) != 0 {
 		return input
 	}
@@ -17,8 +17,8 @@ func ResolveDockerEndpoint(input string) string {
 	return "unix:///var/run/docker.sock"
 }
 
-func PullImageIfNotExist(image string) error {
-	client, err := docker.NewClient(ResolveDockerEndpoint(""))
+func pullImageIfNotExist(image string) error {
+	client, err := docker.NewClient(resolveDockerEndpoint(""))
 	if err != nil {
 		return err
 	}
@@ -30,4 +30,12 @@ func PullImageIfNotExist(image string) error {
 			docker.AuthConfiguration{})
 	}
 	return err
+}
+
+func convertEnvMapToSlice(envMap map[string]string) []string {
+	envSlice := []string{}
+	for key, value := range envMap {
+		envSlice = append(envSlice, fmt.Sprintf("%s=%s", key, value))
+	}
+	return envSlice
 }

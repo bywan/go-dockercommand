@@ -8,7 +8,7 @@ type RmOptions struct {
 }
 
 func (dock *Docker) Rm(options *RmOptions) error {
-	client, err := docker.NewClient(ResolveDockerEndpoint(dock.endpointURL))
+	client, err := docker.NewClient(resolveDockerEndpoint(dock.endpointURL))
 	if err != nil {
 		return err
 	}

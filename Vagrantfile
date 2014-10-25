@@ -2,11 +2,10 @@ require 'vagrant-openstack-provider'
 
 Vagrant.configure('2') do |config|
 
-  config.vm.box = 'openstack'
+  config.vm.box = 'ubuntu/trusty64'
 
-  config.ssh.username = ENV['OS_SSH_USERNAME']
-
-  config.vm.provider :openstack do |os|
+  config.vm.provider :openstack do |os, override|
+    override.ssh.username    = ENV['OS_SSH_USERNAME']
     os.openstack_auth_url    = ENV['OS_AUTH_URL']
     os.tenant_name           = ENV['OS_TENANT_NAME']
     os.username              = ENV['OS_USERNAME']

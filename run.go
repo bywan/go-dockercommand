@@ -11,11 +11,11 @@ type RunOptions struct {
 }
 
 func (dock *Docker) Run(options *RunOptions) (error, string) {
-	client, err := docker.NewClient(ResolveDockerEndpoint(dock.endpointURL))
+	client, err := docker.NewClient(resolveDockerEndpoint(dock.endpointURL))
 	if err != nil {
 		return err, ""
 	}
-	if err = PullImageIfNotExist(options.Image); err != nil {
+	if err = pullImageIfNotExist(options.Image); err != nil {
 		return err, ""
 	}
 
@@ -23,6 +23,7 @@ func (dock *Docker) Run(options *RunOptions) (error, string) {
 		Config: &docker.Config{
 			Image: options.Image,
 			Cmd:   options.Cmd,
+			Env:   convertEnvMapToSlice(options.Env),
 		},
 	})
 	if err != nil {
