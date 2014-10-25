@@ -19,11 +19,6 @@ type BuildOptions struct {
 }
 
 func (dock *Docker) Build(options *BuildOptions) error {
-	client, err := docker.NewClient(resolveDockerEndpoint(dock.endpointURL))
-	if err != nil {
-		return err
-	}
-
 	t := time.Now()
 
 	inputbuf, outputbuf := bytes.NewBuffer(nil), bytes.NewBuffer(nil)
@@ -51,7 +46,7 @@ func (dock *Docker) Build(options *BuildOptions) error {
 		InputStream:  inputbuf,
 		OutputStream: outputbuf,
 	}
-	err = client.BuildImage(opts)
+	err = dock.client.BuildImage(opts)
 	log.Printf("%s\n", outputbuf.Bytes())
 	if err != nil {
 		return err

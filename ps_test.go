@@ -7,8 +7,11 @@ import (
 )
 
 func TestDockerPs(t *testing.T) {
-	docker := &Docker{}
-	_, err := docker.Run(&RunOptions{
+	docker, err := NewDocker("")
+	if err != nil {
+		t.Fatalf("err: %s", err)
+	}
+	_, err = docker.Run(&RunOptions{
 		Image: "ubuntu",
 		Cmd:   []string{"ls", "/"},
 	})
