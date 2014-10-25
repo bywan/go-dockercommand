@@ -8,7 +8,7 @@ import (
 
 func TestDockerPs(t *testing.T) {
 	docker := &Docker{}
-	err, _ := docker.Run(&RunOptions{
+	_, err := docker.Run(&RunOptions{
 		Image: "ubuntu",
 		Cmd:   []string{"ls", "/"},
 	})
@@ -16,7 +16,7 @@ func TestDockerPs(t *testing.T) {
 		t.Fatalf("err: %s", err)
 	}
 
-	err, containers := docker.Ps(&PsOptions{})
+	containers, err := docker.Ps(&PsOptions{})
 	if err != nil {
 		t.Fatalf("err: %s", err)
 	}
