@@ -8,7 +8,7 @@ import (
 
 func TestDockerInspect(t *testing.T) {
 	docker := &Docker{}
-	err, containerID := docker.Run(&RunOptions{
+	containerID, err := docker.Run(&RunOptions{
 		Image: "ubuntu",
 		Cmd:   []string{"ls", "/"},
 	})
@@ -16,7 +16,7 @@ func TestDockerInspect(t *testing.T) {
 		t.Fatalf("err: %s", err)
 	}
 
-	err, inspect := docker.Inspect(containerID)
+	inspect, err := docker.Inspect(containerID)
 	if err != nil {
 		t.Fatalf("err: %s", err)
 	}

@@ -10,13 +10,13 @@ type RunOptions struct {
 	Env         map[string]string
 }
 
-func (dock *Docker) Run(options *RunOptions) (error, string) {
+func (dock *Docker) Run(options *RunOptions) (string, error) {
 	client, err := docker.NewClient(resolveDockerEndpoint(dock.endpointURL))
 	if err != nil {
-		return err, "" 
+		return "", err
 	}
 	if err = pullImageIfNotExist(options.Image); err != nil {
-		return err, ""
+		return "", err
 	}
 
 	container, err := client.CreateContainer(docker.CreateContainerOptions{
@@ -27,21 +27,21 @@ func (dock *Docker) Run(options *RunOptions) (error, string) {
 		},
 	})
 	if err != nil {
-		return err, ""
+		return "", err
 	}
 
 	err = client.StartContainer(container.ID, &docker.HostConfig{
 		Binds: options.VolumeBinds,
 	})
 	if err != nil {
-		return err, ""
+		return "", err
 	}
 
 	if !options.Detach {
 		_, err = client.WaitContainer(container.ID)
 		if err != nil {
-			return err, ""
+			return "", err
 		}
 	}
-	return nil, container.ID
+	return container.ID, nil
 }

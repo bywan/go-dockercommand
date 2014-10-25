@@ -10,10 +10,10 @@ type PsOptions struct {
 	Before string
 }
 
-func (dock *Docker) Ps(options *PsOptions) (error, []docker.APIContainers) {
+func (dock *Docker) Ps(options *PsOptions) ([]docker.APIContainers, error) {
 	client, err := docker.NewClient(resolveDockerEndpoint(dock.endpointURL))
 	if err != nil {
-		return err, nil
+		return nil, err
 	}
 
 	containers, err := client.ListContainers(docker.ListContainersOptions{
@@ -24,8 +24,8 @@ func (dock *Docker) Ps(options *PsOptions) (error, []docker.APIContainers) {
 		Before: options.Before,
 	})
 	if err != nil {
-		return err, nil
+		return nil, err
 	}
 
-	return nil, containers
+	return containers, nil
 }

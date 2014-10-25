@@ -4,7 +4,7 @@ import "testing"
 
 func TestDockerRm(t *testing.T) {
 	docker := &Docker{}
-	err, containerID := docker.Run(&RunOptions{
+	containerID, err := docker.Run(&RunOptions{
 		Image: "ubuntu",
 		Cmd:   []string{"ls", "/"},
 	})

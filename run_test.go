@@ -4,7 +4,7 @@ import "testing"
 
 func TestDockerRun(t *testing.T) {
 	docker := &Docker{}
-	err, _ := docker.Run(&RunOptions{
+	_, err := docker.Run(&RunOptions{
 		Image: "ubuntu",
 		Cmd:   []string{"/bin/sh", "-c", "while true; do echo hello world; sleep 1; done"},
 		Env: map[string]string{
