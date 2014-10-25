@@ -13,7 +13,7 @@ type RunOptions struct {
 func (dock *Docker) Run(options *RunOptions) (error, string) {
 	client, err := docker.NewClient(resolveDockerEndpoint(dock.endpointURL))
 	if err != nil {
-		return err, ""
+		return err, "" 
 	}
 	if err = pullImageIfNotExist(options.Image); err != nil {
 		return err, ""

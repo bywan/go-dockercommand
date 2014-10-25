@@ -1,8 +1,9 @@
 package dockercommand
 
 import (
-	"fmt"
 	"testing"
+
+	"github.com/stretchr/testify/assert"
 )
 
 func TestDockerInspect(t *testing.T) {
@@ -19,5 +20,5 @@ func TestDockerInspect(t *testing.T) {
 	if err != nil {
 		t.Fatalf("err: %s", err)
 	}
-	fmt.Printf("%s\n", inspect)
+	assert.NotEmpty(t, inspect)
 }
