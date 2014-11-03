@@ -1,12 +1,20 @@
 package dockercommand
 
-import docker "github.com/fsouza/go-dockerclient"
+import (
+	"bufio"
+	"fmt"
+	"io"
+	"os"
+
+	docker "github.com/fsouza/go-dockerclient"
+)
 
 type RunOptions struct {
 	Image       string
 	Cmd         []string
 	VolumeBinds []string
 	Detach      bool
+	Logs        bool
 	Env         map[string]string
 }
 
@@ -31,6 +39,34 @@ func (dock *Docker) Run(options *RunOptions) (string, error) {
 	})
 	if err != nil {
 		return "", err
+	}
+
+	if options.Logs {
+		r, w := io.Pipe()
+		options := docker.LogsOptions{
+			Container:    container.ID,
+			OutputStream: w,
+			ErrorStream:  w,
+			Follow:       true,
+			Stdout:       true,
+			Stderr:       true,
+		}
+		go func() {
+			fmt.Println("Logs container %s", container.ID)
+			err := dock.client.Logs(options)
+			if err != nil {
+				fmt.Println(err.Error())
+			}
+		}()
+		go func(reader io.Reader) {
+			scanner := bufio.NewScanner(reader)
+			for scanner.Scan() {
+				fmt.Printf("%s \n", scanner.Text())
+			}
+			if err := scanner.Err(); err != nil {
+				fmt.Fprintln(os.Stderr, "There was an error with the scanner in attached container", err)
+			}
+		}(r)
 	}
 
 	if !options.Detach {
