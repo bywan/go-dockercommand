@@ -18,9 +18,9 @@ type RunOptions struct {
 	Env         map[string]string
 }
 
-func (dock *Docker) Run(options *RunOptions) (string, error) {
+func (dock *Docker) Run(options *RunOptions) (*Container, error) {
 	if err := dock.pullImageIfNotExist(options.Image); err != nil {
-		return "", err
+		return nil, err
 	}
 
 	container, err := dock.client.CreateContainer(docker.CreateContainerOptions{
@@ -31,14 +31,14 @@ func (dock *Docker) Run(options *RunOptions) (string, error) {
 		},
 	})
 	if err != nil {
-		return "", err
+		return nil, err
 	}
 
 	err = dock.client.StartContainer(container.ID, &docker.HostConfig{
 		Binds: options.VolumeBinds,
 	})
 	if err != nil {
-		return "", err
+		return nil, err
 	}
 
 	if options.Logs {
@@ -72,7 +72,7 @@ func (dock *Docker) Run(options *RunOptions) (string, error) {
 	if !options.Detach {
 		_, err = dock.client.WaitContainer(container.ID)
 		if err != nil {
-			return "", err
+			return nil, err
 		}
 	}
 	return container.ID, nil
