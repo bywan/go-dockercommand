@@ -7,7 +7,7 @@ func TestDockerRm(t *testing.T) {
 	if err != nil {
 		t.Fatalf("err: %s", err)
 	}
-	containerID, err := docker.Run(&RunOptions{
+	container, err := docker.Run(&RunOptions{
 		Image: "ubuntu",
 		Cmd:   []string{"ls", "/"},
 	})
@@ -15,9 +15,7 @@ func TestDockerRm(t *testing.T) {
 		t.Fatalf("err: %s", err)
 	}
 
-	err = docker.Rm(&RmOptions{
-		Container: []string{containerID},
-	})
+	err = container.Remove()
 	if err != nil {
 		t.Fatalf("err: %s", err)
 	}
