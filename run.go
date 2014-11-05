@@ -41,6 +41,11 @@ func (dock *Docker) Run(options *RunOptions) (*Container, error) {
 		return nil, err
 	}
 
+	containerWrapper := &Container{
+		info:   container,
+		client: dock.client,
+	}
+
 	if options.Logs {
 		r, w := io.Pipe()
 		options := docker.LogsOptions{
@@ -75,5 +80,5 @@ func (dock *Docker) Run(options *RunOptions) (*Container, error) {
 			return nil, err
 		}
 	}
-	return container.ID, nil
+	return containerWrapper, nil
 }
