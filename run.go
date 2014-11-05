@@ -1,11 +1,6 @@
 package dockercommand
 
 import (
-	"bufio"
-	"fmt"
-	"io"
-	"os"
-
 	docker "github.com/fsouza/go-dockerclient"
 )
 
