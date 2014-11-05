@@ -1,6 +1,7 @@
 package dockercommand
 
 import (
+	"bufio"
 	"io"
 	"log"
 
@@ -31,6 +32,20 @@ func (c *Container) StreamLogs(w io.Writer) {
 			log.Println(err.Error())
 		}
 	}()
+}
+
+func (c *Container) Logs(prefix string) {
+	r, w := io.Pipe()
+	c.StreamLogs(w)
+	go func(reader io.Reader) {
+		scanner := bufio.NewScanner(reader)
+		for scanner.Scan() {
+			log.Printf("[%s] %s \n", prefix, scanner.Text())
+		}
+		if err := scanner.Err(); err != nil {
+			log.Println("There was an error with the scanner in attached container", err)
+		}
+	}(r)
 }
 
 func (c *Container) Remove() error {
