@@ -2,7 +2,9 @@ package dockercommand
 
 import (
 	"archive/tar"
+	"bufio"
 	"bytes"
+	"io"
 	"io/ioutil"
 	"log"
 	"os"
@@ -21,7 +23,7 @@ type BuildOptions struct {
 func (dock *Docker) Build(options *BuildOptions) error {
 	t := time.Now()
 
-	inputbuf, outputbuf := bytes.NewBuffer(nil), bytes.NewBuffer(nil)
+	inputbuf := bytes.NewBuffer(nil)
 
 	bytearray, err := ioutil.ReadFile(options.Dockerfile)
 	if err != nil {
@@ -41,13 +43,25 @@ func (dock *Docker) Build(options *BuildOptions) error {
 	if err = tw.Close(); err != nil {
 		return err
 	}
+
+	logsReader, outputbuf := io.Pipe()
+	go func(reader io.Reader) {
+		scanner := bufio.NewScanner(reader)
+		for scanner.Scan() {
+			log.Printf("%s \n", scanner.Text())
+		}
+		if err := scanner.Err(); err != nil {
+			log.Println("There was an error with the scanner in attached container", err)
+		}
+	}(logsReader)
+
 	opts := docker.BuildImageOptions{
 		Name:         options.Tag,
 		InputStream:  inputbuf,
 		OutputStream: outputbuf,
 	}
 	err = dock.client.BuildImage(opts)
-	log.Printf("%s\n", outputbuf.Bytes())
+
 	if err != nil {
 		return err
 	}
