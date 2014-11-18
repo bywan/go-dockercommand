@@ -17,6 +17,10 @@ func (c *Container) Wait() (int, error) {
 	return c.client.WaitContainer(c.info.ID)
 }
 
+func (c *Container) Stop(timeout uint) error {
+	return c.client.StopContainer(c.info.ID, timeout)
+}
+
 func (c *Container) StreamLogs(w io.Writer) {
 	options := docker.LogsOptions{
 		Container:    c.info.ID,
