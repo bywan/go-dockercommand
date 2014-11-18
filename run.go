@@ -5,6 +5,7 @@ import (
 )
 
 type RunOptions struct {
+	Name        string
 	Image       string
 	Cmd         []string
 	VolumeBinds []string
@@ -19,6 +20,7 @@ func (dock *Docker) Run(options *RunOptions) (*Container, error) {
 	}
 
 	container, err := dock.client.CreateContainer(docker.CreateContainerOptions{
+		Name: options.Name,
 		Config: &docker.Config{
 			Image: options.Image,
 			Cmd:   options.Cmd,
