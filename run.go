@@ -8,6 +8,7 @@ type RunOptions struct {
 	Image       string
 	Cmd         []string
 	VolumeBinds []string
+	Links       []string
 	Detach      bool
 	Env         map[string]string
 }
@@ -30,6 +31,7 @@ func (dock *Docker) Run(options *RunOptions) (*Container, error) {
 
 	err = dock.client.StartContainer(container.ID, &docker.HostConfig{
 		Binds: options.VolumeBinds,
+		Links: options.Links,
 	})
 	if err != nil {
 		return nil, err
