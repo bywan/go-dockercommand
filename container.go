@@ -13,6 +13,11 @@ type Container struct {
 	client *docker.Client
 }
 
+type RemoveOptions struct {
+	RemoveVolumes bool
+	Force         bool
+}
+
 func (c *Container) Wait() (int, error) {
 	return c.client.WaitContainer(c.info.ID)
 }
@@ -52,10 +57,11 @@ func (c *Container) Logs(prefix string) {
 	}(r)
 }
 
-func (c *Container) Remove() error {
+func (c *Container) Remove(opts RemoveOptions) error {
 	options := docker.RemoveContainerOptions{
-		ID:    c.info.ID,
-		Force: true,
+		ID:            c.info.ID,
+		Force:         opts.Force,
+		RemoveVolumes: opts.RemoveVolumes,
 	}
 	return c.client.RemoveContainer(options)
 }
