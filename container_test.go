@@ -2,7 +2,7 @@ package dockercommand
 
 import "testing"
 
-func TestDockerRm(t *testing.T) {
+func TestContainerRemove(t *testing.T) {
 	docker, err := NewDocker("")
 	if err != nil {
 		t.Fatalf("err: %s", err)
@@ -15,8 +15,7 @@ func TestDockerRm(t *testing.T) {
 		t.Fatalf("err: %s", err)
 	}
 
-	err = docker.Rm(&RmOptions{
-		Container:     []string{container.info.ID},
+	err = container.Remove(RemoveOptions{
 		Force:         true,
 		RemoveVolumes: true,
 	})
