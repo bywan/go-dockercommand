@@ -57,7 +57,7 @@ func (c *Container) Logs(prefix string) {
 	}(r)
 }
 
-func (c *Container) Remove(opts RemoveOptions) error {
+func (c *Container) Remove(opts *RemoveOptions) error {
 	options := docker.RemoveContainerOptions{
 		ID:            c.info.ID,
 		Force:         opts.Force,

@@ -15,7 +15,7 @@ func TestContainerRemove(t *testing.T) {
 		t.Fatalf("err: %s", err)
 	}
 
-	err = container.Remove(RemoveOptions{
+	err = container.Remove(&RemoveOptions{
 		Force:         true,
 		RemoveVolumes: true,
 	})
