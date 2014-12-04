@@ -4,6 +4,7 @@ import (
 	"bufio"
 	"io"
 	"log"
+	"os"
 
 	docker "github.com/fsouza/go-dockerclient"
 )
@@ -44,15 +45,19 @@ func (c *Container) StreamLogs(w io.Writer) {
 }
 
 func (c *Container) Logs(prefix string) {
+	c.LogsWith(prefix, log.New(os.Stdout, "", 0))
+}
+
+func (c *Container) LogsWith(prefix string, logger *log.Logger) {
 	r, w := io.Pipe()
 	c.StreamLogs(w)
 	go func(reader io.Reader) {
 		scanner := bufio.NewScanner(reader)
 		for scanner.Scan() {
-			log.Printf("[%s] %s \n", prefix, scanner.Text())
+			logger.Printf("[%s] %s \n", prefix, scanner.Text())
 		}
 		if err := scanner.Err(); err != nil {
-			log.Println("There was an error with the scanner in attached container", err)
+			logger.Println("There was an error with the scanner in attached container", err)
 		}
 	}(r)
 }

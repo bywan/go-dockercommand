@@ -21,6 +21,10 @@ type BuildOptions struct {
 }
 
 func (dock *Docker) Build(options *BuildOptions) error {
+	return dock.BuildWithLogger(options, log.New(os.Stdout, "", 0))
+}
+
+func (dock *Docker) BuildWithLogger(options *BuildOptions, logger *log.Logger) error {
 	t := time.Now()
 
 	inputbuf := bytes.NewBuffer(nil)
@@ -48,10 +52,10 @@ func (dock *Docker) Build(options *BuildOptions) error {
 	go func(reader io.Reader) {
 		scanner := bufio.NewScanner(reader)
 		for scanner.Scan() {
-			log.Printf("%s \n", scanner.Text())
+			logger.Printf("%s \n", scanner.Text())
 		}
 		if err := scanner.Err(); err != nil {
-			log.Println("There was an error with the scanner in attached container", err)
+			logger.Println("There was an error with the scanner in attached container", err)
 		}
 	}(logsReader)
 

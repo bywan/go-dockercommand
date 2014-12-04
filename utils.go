@@ -9,9 +9,7 @@ import (
 
 func (dock *Docker) pullImageIfNotExist(image string) error {
 	_, err := dock.client.InspectImage(image)
-	fmt.Printf("1\n")
 	if err != nil && err.Error() == "no such image" {
-		fmt.Printf("2\n")
 		err = dock.client.PullImage(docker.PullImageOptions{Repository: image, OutputStream: os.Stdout},
 			docker.AuthConfiguration{})
 	}
