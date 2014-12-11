@@ -5,13 +5,15 @@ import (
 )
 
 type RunOptions struct {
-	Name        string
-	Image       string
-	Cmd         []string
-	VolumeBinds []string
-	Links       []string
-	Detach      bool
-	Env         map[string]string
+	Name            string
+	Image           string
+	Cmd             []string
+	VolumeBinds     []string
+	Links           []string
+	PublishAllPorts bool
+	PortBindings    map[docker.Port][]docker.PortBinding
+	Detach          bool
+	Env             map[string]string
 }
 
 func (dock *Docker) Run(options *RunOptions) (*Container, error) {
@@ -32,8 +34,10 @@ func (dock *Docker) Run(options *RunOptions) (*Container, error) {
 	}
 
 	err = dock.client.StartContainer(container.ID, &docker.HostConfig{
-		Binds: options.VolumeBinds,
-		Links: options.Links,
+		Binds:           options.VolumeBinds,
+		Links:           options.Links,
+		PublishAllPorts: options.PublishAllPorts,
+		PortBindings:    options.PortBindings,
 	})
 	if err != nil {
 		return nil, err
