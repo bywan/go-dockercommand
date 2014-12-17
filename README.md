@@ -8,3 +8,5 @@ containers, in the manner of the Docker CLI
 
 We use the great [fsouza/go-dockerclient](https://github.com/fsouza/go-dockerclient)
 to communicate with the Docker engine.
+
+Note: Requires at least go 1.2
