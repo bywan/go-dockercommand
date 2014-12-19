@@ -11,7 +11,7 @@ import (
 
 type Container struct {
 	info   *docker.Container
-	client *docker.Client
+	client Client
 }
 
 type RemoveOptions struct {

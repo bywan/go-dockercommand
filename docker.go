@@ -12,7 +12,7 @@ import (
 )
 
 type Docker struct {
-	client *docker.Client
+	client Client
 }
 
 func NewDocker(endpoint string) (*Docker, error) {
@@ -44,10 +44,9 @@ func NewDocker(endpoint string) (*Docker, error) {
 			TLSClientConfig: tlsConfig,
 		}
 		client.HTTPClient.Transport = tr
-
 	}
 
-	return &Docker{client}, nil
+	return &Docker{&FsouzaClient{client}}, nil
 }
 
 func resolveDockerEndpoint(input string) string {
