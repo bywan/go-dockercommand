@@ -1,17 +1,11 @@
 package dockercommand
 
-import (
-	"fmt"
-	"os"
-
-	docker "github.com/fsouza/go-dockerclient"
-)
+import "fmt"
 
 func (dock *Docker) pullImageIfNotExist(image string) error {
 	_, err := dock.client.InspectImage(image)
 	if err != nil && err.Error() == "no such image" {
-		err = dock.client.PullImage(docker.PullImageOptions{Repository: image, OutputStream: os.Stdout},
-			docker.AuthConfiguration{})
+		err = dock.Pull(&PullOptions{image})
 	}
 	return err
 }
