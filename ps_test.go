@@ -12,7 +12,7 @@ func TestShortDockerPs(t *testing.T) {
 		t.Fatalf("err: %s", err)
 	}
 
-	containers, err := docker.Ps(&PsOptions{})
+	containers, err := docker.Ps(&PsOptions{All: true})
 	if err != nil {
 		t.Fatalf("err: %s", err)
 	}
