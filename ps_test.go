@@ -30,7 +30,7 @@ func TestLongDockerPs(t *testing.T) {
 	if err != nil {
 		t.Fatalf("err: %s", err)
 	}
-	_, err = docker.Run(&RunOptions{
+	container, err := docker.Run(&RunOptions{
 		Image: "ubuntu",
 		Cmd:   []string{"ls", "/"},
 	})
@@ -38,9 +38,16 @@ func TestLongDockerPs(t *testing.T) {
 		t.Fatalf("err: %s", err)
 	}
 
-	containers, err := docker.Ps(&PsOptions{})
+	containers, err := docker.Ps(&PsOptions{
+		All: true,
+	})
 	if err != nil {
 		t.Fatalf("err: %s", err)
 	}
 	assert.NotEmpty(t, containers)
+
+	err = cleanContainer(docker, container.ID())
+	if err != nil {
+		t.Fatalf("err: %s", err)
+	}
 }

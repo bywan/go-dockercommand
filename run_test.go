@@ -10,7 +10,7 @@ func TestDockerRun(t *testing.T) {
 	if err != nil {
 		t.Fatalf("err: %s", err)
 	}
-	_, err = docker.Run(&RunOptions{
+	container, err := docker.Run(&RunOptions{
 		Image: "ubuntu",
 		Cmd:   []string{"/bin/sh", "-c", "while true; do echo hello world; sleep 1; done"},
 		Env: map[string]string{
@@ -22,6 +22,11 @@ func TestDockerRun(t *testing.T) {
 		},
 		Detach: true,
 	})
+	if err != nil {
+		t.Fatalf("err: %s", err)
+	}
+
+	err = cleanContainer(docker, container.ID())
 	if err != nil {
 		t.Fatalf("err: %s", err)
 	}

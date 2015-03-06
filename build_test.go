@@ -19,4 +19,5 @@ func TestDockerBuild(t *testing.T) {
 		t.Fatalf("err: %s", err)
 	}
 
+	// TODO clean image
 }

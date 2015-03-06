@@ -27,4 +27,9 @@ func TestDockerInspect(t *testing.T) {
 		t.Fatalf("err: %s", err)
 	}
 	assert.NotEmpty(t, inspect)
+
+	err = cleanContainer(docker, container.ID())
+	if err != nil {
+		t.Fatalf("err: %s", err)
+	}
 }

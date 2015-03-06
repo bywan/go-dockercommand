@@ -18,11 +18,7 @@ func TestContainerRemove(t *testing.T) {
 		t.Fatalf("err: %s", err)
 	}
 
-	err = container.Remove(&RemoveOptions{
-		Force:         true,
-		RemoveVolumes: true,
-	})
-
+	err = cleanContainer(docker, container.ID())
 	if err != nil {
 		t.Fatalf("err: %s", err)
 	}
