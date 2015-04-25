@@ -4,6 +4,7 @@ import docker "github.com/fsouza/go-dockerclient"
 
 type Client interface {
 	ListContainers(opts docker.ListContainersOptions) ([]docker.APIContainers, error)
+	ListImages(opts docker.ListImagesOptions) ([]docker.APIImages, error)
 	BuildImage(opts docker.BuildImageOptions) error
 	InspectContainer(id string) (*docker.Container, error)
 	PullImage(opts docker.PullImageOptions, auth docker.AuthConfiguration) error
@@ -46,6 +47,10 @@ func (c *FsouzaClient) CreateContainer(opts docker.CreateContainerOptions) (*doc
 
 func (c *FsouzaClient) ListContainers(opts docker.ListContainersOptions) ([]docker.APIContainers, error) {
 	return c.client.ListContainers(opts)
+}
+
+func (c *FsouzaClient) ListImages(opts docker.ListImagesOptions) ([]docker.APIImages, error) {
+	return c.client.ListImages(opts)
 }
 
 func (c *FsouzaClient) BuildImage(opts docker.BuildImageOptions) error {

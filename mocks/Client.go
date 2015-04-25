@@ -31,12 +31,21 @@ func (c *FakeClient) CreateContainer(opts docker.CreateContainerOptions) (*docke
 
 func (c *FakeClient) ListContainers(opts docker.ListContainersOptions) ([]docker.APIContainers, error) {
 	return []docker.APIContainers{
-		docker.APIContainers{
+		{
 			ID:    "8dfafdbc3a40",
 			Image: "ubuntu:latest",
-		}, docker.APIContainers{
+		}, {
 			ID:    "0236fd017853",
 			Image: "base:2",
+		}}, nil
+}
+
+func (c *FakeClient) ListImages(opts docker.ListImagesOptions) ([]docker.APIImages, error) {
+	return []docker.APIImages{
+		{
+			ID: "8dfafdbc3a40",
+		}, {
+			ID: "0236fd017853",
 		}}, nil
 }
 
