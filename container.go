@@ -38,6 +38,9 @@ func (c *Container) StreamLogs(w io.Writer) {
 	}
 	go func() {
 		err := c.client.Logs(options)
+		if wc, ok := w.(io.WriteCloser); ok {
+			wc.Close()
+		}
 		if err != nil {
 			log.Println(err.Error())
 		}
