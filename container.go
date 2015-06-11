@@ -1,7 +1,6 @@
 package dockercommand
 
 import (
-	"bufio"
 	"io"
 	"log"
 	"os"
@@ -55,7 +54,7 @@ func (c *Container) LogsWith(prefix string, logger *log.Logger) {
 	r, w := io.Pipe()
 	c.StreamLogs(w)
 	go func(reader io.Reader) {
-		scanner := bufio.NewScanner(reader)
+		scanner := NewScanner(reader)
 		for scanner.Scan() {
 			logger.Printf("[%s] %s \n", prefix, scanner.Text())
 		}
