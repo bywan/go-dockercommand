@@ -33,8 +33,9 @@ func (dock *Docker) Run(options *RunOptions) (*Container, error) {
 		return nil, err
 	}
 
-	err = dock.client.StartContainer(container.ID, &docker.HostConfig{
-		Binds:           options.VolumeBinds,
+	err = dock.Start(&StartOptions{
+		ID:              container.ID,
+		VolumeBinds:     options.VolumeBinds,
 		Links:           options.Links,
 		PublishAllPorts: options.PublishAllPorts,
 		PortBindings:    options.PortBindings,
