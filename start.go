@@ -10,6 +10,7 @@ type StartOptions struct {
 	Links           []string
 	PublishAllPorts bool
 	PortBindings    map[docker.Port][]docker.PortBinding
+	LogConfig       docker.LogConfig
 }
 
 func (dock *Docker) Start(options *StartOptions) error {
