@@ -19,5 +19,6 @@ func (dock *Docker) Start(options *StartOptions) error {
 		Links:           options.Links,
 		PublishAllPorts: options.PublishAllPorts,
 		PortBindings:    options.PortBindings,
+		LogConfig:       options.LogConfig,
 	})
 }
