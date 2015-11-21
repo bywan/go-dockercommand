@@ -16,6 +16,7 @@ type RunOptions struct {
 	Env                 map[string]string
 	LoggingDriver       string
 	LoggingDriverConfig map[string]string
+	NetworkMode         string
 }
 
 func (dock *Docker) Run(options *RunOptions) (*Container, error) {
@@ -41,6 +42,7 @@ func (dock *Docker) Run(options *RunOptions) (*Container, error) {
 		Links:           options.Links,
 		PublishAllPorts: options.PublishAllPorts,
 		PortBindings:    options.PortBindings,
+		NetworkMode:     options.NetworkMode,
 		LogConfig: docker.LogConfig{
 			Type:   options.LoggingDriver,
 			Config: options.LoggingDriverConfig,
