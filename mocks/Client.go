@@ -64,3 +64,11 @@ func (c *FakeClient) PullImage(opts docker.PullImageOptions, auth docker.AuthCon
 func (c *FakeClient) RemoveContainer(opts docker.RemoveContainerOptions) error {
 	panic("Not Implemented Yet")
 }
+
+func (c *FakeClient) ListNetworks() ([]docker.Network, error) {
+	panic("Not Implemented Yet")
+}
+
+func (c *FakeClient) CreateNetwork(opts docker.CreateNetworkOptions) (*docker.Network, error) {
+	panic("Not Implemented Yet")
+}

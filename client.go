@@ -15,6 +15,8 @@ type Client interface {
 	StopContainer(id string, timeout uint) error
 	InspectImage(name string) (*docker.Image, error)
 	Logs(opts docker.LogsOptions) error
+	ListNetworks() ([]docker.Network, error)
+	CreateNetwork(docker.CreateNetworkOptions) (*docker.Network, error)
 }
 
 type FsouzaClient struct {
@@ -67,4 +69,12 @@ func (c *FsouzaClient) PullImage(opts docker.PullImageOptions, auth docker.AuthC
 
 func (c *FsouzaClient) RemoveContainer(opts docker.RemoveContainerOptions) error {
 	return c.client.RemoveContainer(opts)
+}
+
+func (c *FsouzaClient) ListNetworks() ([]docker.Network, error) {
+	return c.client.ListNetworks()
+}
+
+func (c *FsouzaClient) CreateNetwork(opts docker.CreateNetworkOptions) (*docker.Network, error) {
+	return c.client.CreateNetwork(opts)
 }
