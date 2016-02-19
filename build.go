@@ -16,6 +16,8 @@ type BuildOptions struct {
 	Path string
 	// The repository name
 	Tag string
+	//The Build args
+	BuildArgs map[string]string
 }
 
 func (dock *Docker) Build(options *BuildOptions) error {
@@ -34,11 +36,23 @@ func (dock *Docker) BuildWithLogger(options *BuildOptions, logger *log.Logger) e
 		}
 	}(logsReader)
 
+	buildArgs := make([]docker.BuildArg, len(options.BuildArgs))
+	i := 0
+
+	for k, v := range options.BuildArgs {
+		buildArgs[i] = docker.BuildArg{
+			Name:  k,
+			Value: v,
+		}
+		i++
+	}
+
 	opts := docker.BuildImageOptions{
 		Name:         options.Tag,
 		Dockerfile:   options.Dockerfile,
 		ContextDir:   options.Path,
 		OutputStream: outputbuf,
+		BuildArgs:    buildArgs,
 	}
 	err := dock.client.BuildImage(opts)
 
