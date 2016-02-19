@@ -18,6 +18,8 @@ type BuildOptions struct {
 	Tag string
 	//The Build args
 	BuildArgs map[string]string
+	//Build without cache
+	NoCache bool
 }
 
 func (dock *Docker) Build(options *BuildOptions) error {
@@ -53,6 +55,7 @@ func (dock *Docker) BuildWithLogger(options *BuildOptions, logger *log.Logger) e
 		ContextDir:   options.Path,
 		OutputStream: outputbuf,
 		BuildArgs:    buildArgs,
+		NoCache:      options.NoCache,
 	}
 	err := dock.client.BuildImage(opts)
 
