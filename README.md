@@ -10,3 +10,36 @@ We use the great [fsouza/go-dockerclient](https://github.com/fsouza/go-dockercli
 to communicate with the Docker engine.
 
 Note: Requires at least go 1.3
+
+# Examples
+
+Start a nginx container with go-dockercommand
+
+```go
+package main
+
+import (
+	"fmt"
+
+	docker "github.com/bywan/go-dockercommand"
+)
+
+func main() {
+	// Create go-dockercommand client
+	client, err := docker.NewDocker("")
+	if err != nil {
+		fmt.Printf("Error creating go-dockercommand client, error is: %v", err)
+	}
+
+	// Create a nginx container
+	_, err = client.Run(&docker.RunOptions{
+		Name:   "test",
+		Image:  "nginx",
+		Detach: true,
+	})
+
+	if err != nil {
+		fmt.Printf("Error Starting Docker Container, error is: %v", err)
+	}
+}
+```
