@@ -1,6 +1,10 @@
 package dockercommand
 
-import "testing"
+import (
+	"testing"
+
+	"github.com/stretchr/testify/assert"
+)
 
 func TestDockerRun(t *testing.T) {
 	if testing.Short() {
@@ -27,6 +31,41 @@ func TestDockerRun(t *testing.T) {
 	}
 
 	err = cleanContainer(docker, container.ID())
+	if err != nil {
+		t.Fatalf("err: %s", err)
+	}
+}
+
+func TestDockerRunTwice(t *testing.T) {
+	if testing.Short() {
+		t.Skip("skipping test in short mode.")
+	}
+
+	docker, err := NewDocker("")
+	if err != nil {
+		t.Fatalf("err: %s", err)
+	}
+	container1, err := docker.Run(&RunOptions{
+		Name:   "test_docker_command",
+		Image:  "ubuntu",
+		Cmd:    []string{"ls"},
+		Detach: true,
+	})
+	if err != nil {
+		t.Fatalf("err: %s", err)
+	}
+
+	_, err = docker.Run(&RunOptions{
+		Name:   "test_docker_command",
+		Image:  "ubuntu",
+		Cmd:    []string{"ps"},
+		Detach: true,
+	})
+
+	assert.NotNil(t, err)
+	assert.Equal(t, err.Error(), "container already exists")
+
+	err = cleanContainer(docker, container1.ID())
 	if err != nil {
 		t.Fatalf("err: %s", err)
 	}
